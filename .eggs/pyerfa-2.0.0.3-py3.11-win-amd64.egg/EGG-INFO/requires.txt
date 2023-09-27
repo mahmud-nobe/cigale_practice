@@ -1,0 +1,8 @@
+numpy>=1.17
+
+[docs]
+sphinx-astropy>=1.3
+
+[test]
+pytest
+pytest-doctestplus>=0.7
