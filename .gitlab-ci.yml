@@ -1,0 +1,16 @@
+stages:
+  - build
+
+build_wheel:
+  stage: build
+  image: python:latest
+  variables:
+    PIP_CACHE_DIR: "$CI_PROJECT_DIR/.cache/pip"
+  cache:
+    paths:
+      - .cache/pip
+  script:
+    - pip install build twine
+    - 1>/dev/null python -m build --wheel
+    - TWINE_PASSWORD=${CI_JOB_TOKEN} TWINE_USERNAME=gitlab-ci-token python -m twine upload --repository-url ${CI_API_V4_URL}/projects/${CI_PROJECT_ID}/packages/pypi dist/pcigale*.whl
+  when: manual
