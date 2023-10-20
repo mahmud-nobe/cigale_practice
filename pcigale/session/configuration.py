@@ -8,7 +8,7 @@ from glob import glob  # To allow the use of glob() in "eval..."
 import numpy as np
 import validate
 
-from ..managers.parameters import ParametersManager
+from picagle.managers.parameters import ParametersManager
 from ..data import SimpleDatabase as Database
 from pcigale.utils.io import read_table
 from .. import sed_modules
