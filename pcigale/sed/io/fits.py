@@ -1,5 +1,10 @@
-from astropy.table import Table, Column
+import warnings
+
 import numpy as np
+from astropy.table import Column, Table
+from astropy.utils.exceptions import AstropyUserWarning
+
+warnings.simplefilter('ignore', AstropyUserWarning)
 
 
 def save_sed_to_fits(sed, prefix, norm=1.0):

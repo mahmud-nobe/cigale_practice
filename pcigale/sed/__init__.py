@@ -23,10 +23,10 @@ import numpy as np
 from numpy.core.multiarray import interp  # Compiled version
 from scipy.constants import parsec
 
-from . import utils
-from .io.vo import save_sed_to_vo
-from .io.fits import save_sed_to_fits
-from ..data import SimpleDatabase as Database
+from pcigale.data import SimpleDatabase as Database
+from pcigale.sed import utils
+from pcigale.sed.io.fits import save_sed_to_fits
+from pcigale.sed.io.vo import save_sed_to_vo
 
 
 class SED:
@@ -262,8 +262,8 @@ class SED:
 
         if filter_name.startswith('line.'):
             lum = 0
-            for name in filter_name.split('+'):
-                line = self.lines[name.split('.', maxsplit=1)[1]]
+            for name in filter_name[5:].split('+'):
+                line = self.lines[name]
                 lum += line[1] + line[2]  # Young and old components
             return utils.luminosity_to_flux(lum, dist)
 

@@ -3,10 +3,11 @@ Various utility functions for pcigale manager modules
 """
 
 import ctypes
+from multiprocessing.sharedctypes import RawArray
+
 import numpy as np
 
-from multiprocessing.sharedctypes import RawArray
-from ..warehouse import SedWarehouse
+from pcigale.warehouse import SedWarehouse
 
 
 def get_info(cls):

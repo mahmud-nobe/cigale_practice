@@ -1,5 +1,6 @@
-from collections.abc import Iterable
 import itertools
+from collections.abc import Iterable
+
 import numpy as np
 
 from pcigale.utils.io import read_table
@@ -153,8 +154,8 @@ class ParametersManagerFile:
                                   conf['analysis_params']['blocks'])
 
         # The parameters file is read using astropy.Table. Unfortunately, it
-        # stores strings as np.str_, which is not marshalable, which means we
-        # cannot use the list of parameter to build a key for the cache. This
+        # stores strings as np.str_, which is not marshalable. This means we
+        # cannot use the list of parameters to build a key for the cache. To
         # overcome this, rather than using the table directly, we split it into
         # several dictionaries, one for each module. Each dictionary contains
         # the arguments in the form of lists that we convert to the right type:
@@ -170,6 +171,14 @@ class ParametersManagerFile:
                                                 table[colname]]
                     else:
                         dict_params[parname] = list(table[colname])
+
+            for parname, value in conf["sed_modules_params"][module].items():
+                if parname not in dict_params:
+                    if isinstance(value, list) is True:
+                        dict_params[parname] = value * self.size
+                    else:
+                        dict_params[parname] = [value] * self.size
+
             self.parameters.append(dict_params)
 
         del table

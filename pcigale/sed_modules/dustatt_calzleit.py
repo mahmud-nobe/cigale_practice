@@ -9,7 +9,7 @@ attenuation formulae, adding an UV-bump and a power law.
 
 import numpy as np
 
-from . import SedModule
+from pcigale.sed_modules import SedModule
 
 __category__ = "dust attenuation"
 
@@ -189,7 +189,7 @@ class CalzLeit(SedModule):
 
     """
 
-    parameter_list = {
+    parameters = {
         "E_BVs_young": (
             "cigale_list(minvalue=0.)",
             "E(B-V)*, the colour excess of the stellar continuum light for "

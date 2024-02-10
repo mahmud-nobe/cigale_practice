@@ -1,15 +1,13 @@
-from astropy.table import Table
 import matplotlib
-import sys
+from astropy.table import Table
 
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt
-import multiprocessing as mp
 import numpy as np
 import pkg_resources
 from scipy import stats
 
-from pcigale.utils.console import console, INFO
+from pcigale.utils.console import INFO, console
 from pcigale.utils.counter import Counter
 from pcigale_plots.plot_types import Plotter
 
@@ -34,9 +32,13 @@ class Mock(Plotter):
         except FileNotFoundError:
             raise Exception(f"Mock models file {mock_results_file} not found.")
 
-        self.configuration = config.configuration
-        params = self.configuration["analysis_params"]["variables"]
+        self.configuration = config.config
 
+        params = [
+            col[6:]
+            for col in estimated.colnames
+            if col.startswith("bayes.") and not col.endswith("_err")
+        ]
         for param in params:
             if param.endswith("_log"):
                 param = f"best.{param}"

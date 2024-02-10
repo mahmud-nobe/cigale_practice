@@ -7,14 +7,14 @@ This module implements the SKIRTOR 2016 models.
 """
 from functools import lru_cache
 
-from astropy.table import Table
 import numpy as np
 import pkg_resources
 import scipy.constants as cst
+from astropy.table import Table
 from scipy.interpolate import interp1d
 
 from pcigale.data import SimpleDatabase as Database
-from . import SedModule
+from pcigale.sed_modules import SedModule
 
 __category__ = "AGN"
 
@@ -149,7 +149,7 @@ class SKIRTOR2016(SedModule):
 
     """
 
-    parameter_list = {
+    parameters = {
         "t": (
             "cigale_list(options=3 & 5 & 7 & 9 & 11)",
             "Average edge-on optical depth at 9.7 micron; the actual one along"

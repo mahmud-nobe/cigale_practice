@@ -12,7 +12,7 @@ This module implements the Jones et al (2017) infrared models.
 import numpy as np
 
 from pcigale.data import SimpleDatabase as Database
-from . import SedModule
+from pcigale.sed_modules import SedModule
 
 __category__ = "dust emission"
 
@@ -29,7 +29,7 @@ class THEMIS(SedModule):
 
     """
 
-    parameter_list = {
+    parameters = {
         'qhac': (
             'cigale_list(options=0.02 & 0.06 & 0.10 & 0.14 & 0.17 & 0.20 & '
             '0.24 & 0.28 & 0.32 & 0.36 & 0.40)',

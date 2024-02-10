@@ -12,14 +12,15 @@ The data file is used only to get the list of fluxes to be computed.
 
 import multiprocessing as mp
 
-from .. import AnalysisModule
+from pcigale.analysis_modules import AnalysisModule
+from pcigale.analysis_modules.savefluxes.workers import fluxes as worker_fluxes
+from pcigale.analysis_modules.savefluxes.workers import \
+    init_fluxes as init_worker_fluxes
+from pcigale.managers.models import ModelsManager
+from pcigale.managers.observations import ObservationsManager
+from pcigale.managers.parameters import ParametersManager
+from pcigale.utils.console import INFO, console
 from pcigale.utils.counter import Counter
-from .workers import init_fluxes as init_worker_fluxes
-from .workers import fluxes as worker_fluxes
-from ...managers.models import ModelsManager
-from ...managers.observations import ObservationsManager
-from ...managers.parameters import ParametersManager
-from pcigale.utils.console import console, INFO
 
 
 class SaveFluxes(AnalysisModule):
@@ -30,7 +31,7 @@ class SaveFluxes(AnalysisModule):
 
     """
 
-    parameter_list = {
+    parameters = {
         "variables": (
             "cigale_string_list()",
             "List of the physical properties to save. Leave empty to save all "

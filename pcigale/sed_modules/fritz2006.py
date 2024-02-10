@@ -7,14 +7,14 @@ This module implements the Fritz et al. (2006) models.
 """
 from functools import lru_cache
 
-from astropy.table import Table
 import numpy as np
 import pkg_resources
 import scipy.constants as cst
+from astropy.table import Table
 from scipy.interpolate import interp1d
 
 from pcigale.data import SimpleDatabase as Database
-from . import SedModule
+from pcigale.sed_modules import SedModule
 
 __category__ = "AGN"
 
@@ -147,7 +147,7 @@ class Fritz2006(SedModule):
 
     """
 
-    parameter_list = {
+    parameters = {
         'r_ratio': (
             "cigale_list(options=10. & 30. & 60. & 100. & 150.)",
             "Ratio of the maximum to minimum radii of the dust torus. "
@@ -427,7 +427,7 @@ class Fritz2006(SedModule):
                              agn_power * (self.fritz2006.dust -
                                           self.fritz2006.polar_dust))
         sed.add_contribution('agn.fritz2006_polar_dust', self.fritz2006.wl,
-                             agn_power * (self.fritz2006.polar_dust) )
+                             agn_power * (self.fritz2006.polar_dust))
         sed.add_contribution('agn.fritz2006_disk', self.fritz2006.wl,
                              agn_power * self.fritz2006.disk)
 

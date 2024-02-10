@@ -9,7 +9,7 @@ attenuation formulae, adding an UV-bump and a power law.
 
 import numpy as np
 
-from . import SedModule
+from pcigale.sed_modules import SedModule
 
 __category__ = "dust attenuation"
 
@@ -157,8 +157,6 @@ def a_vs_ebv(wavelength, bump_wave, bump_width, bump_ampl, power_slope):
     attenuation[mask] = 0
     # Power law
     attenuation *= power_law(wavelength, power_slope)
-    # UV bump
-    attenuation += uv_bump(wavelength, bump_wave, bump_width, bump_ampl)
 
     # As the powerlaw slope changes E(B-V), we correct this so that the curve
     # always has the same E(B-V) as the starburst curve. This ensures that the
@@ -168,7 +166,12 @@ def a_vs_ebv(wavelength, bump_wave, bump_width, bump_ampl, power_slope):
                 uv_bump(wl_BV, bump_wave, bump_width, bump_ampl))
     EBV = ((k_calzetti2000(wl_BV) * power_law(wl_BV, power_slope)) +
            uv_bump(wl_BV, bump_wave, bump_width, bump_ampl))
+
     attenuation *= (EBV_calz[1] - EBV_calz[0]) / (EBV[1] - EBV[0])
+
+    # UV bump. It is added after the renormalization as the bump strength
+    # should not be changed by the renormalization.
+    attenuation += uv_bump(wavelength, bump_wave, bump_width, bump_ampl)
 
     return attenuation
 
@@ -298,7 +301,7 @@ class ModStarburstAtt(SedModule):
 
     """
 
-    parameter_list = {
+    parameters = {
         "E_BV_lines": (
             "cigale_list(minvalue=0.)",
             "E(B-V)l, the colour excess of the nebular lines light for "

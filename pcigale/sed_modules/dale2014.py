@@ -7,7 +7,7 @@ This module implements the Dale (2014) infra-red models.
 """
 
 from pcigale.data import SimpleDatabase as Database
-from . import SedModule
+from pcigale.sed_modules import SedModule
 
 __category__ = "dust emission"
 
@@ -24,7 +24,7 @@ class Dale2014(SedModule):
 
     """
 
-    parameter_list = {
+    parameters = {
         'fracAGN': (
             'cigale_list(minvalue=0., maxvalue=1.)',
             "AGN fraction. It is not recommended to combine this AGN emission "

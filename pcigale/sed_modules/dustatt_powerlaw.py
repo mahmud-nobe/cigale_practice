@@ -9,7 +9,7 @@ in Charlot and Fall (2000) with a UV bump added.
 
 import numpy as np
 
-from . import SedModule
+from pcigale.sed_modules import SedModule
 
 __category__ = "dust attenuation"
 
@@ -104,7 +104,7 @@ class PowerLawAtt(SedModule):
 
     """
 
-    parameter_list = {
+    parameters = {
         "Av_young": (
             "cigale_list(minvalue=0.)",
             "V-band attenuation of the young population.",

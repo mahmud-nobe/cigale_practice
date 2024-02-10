@@ -1,5 +1,29 @@
 # Change Log
 
+## Unreleased
+### Added
+- The `pcigale-filters list` command now also provides the list of nebular emission lines. (Médéric Boquien)
+- It is now possible to plot models computed with the `savefluxes` module with `pcigale-plot sed`. (Médéric Boquien)
+- HST WFC3 filters have been added. For now they correspond to the chip 2 of the instrument. (Médéric Boquien)
+- Before building the database from a git repository, we check whether git-lfs worked as expected. If not we raise en exception, with instructions how to fix the issue. (Médéric Boquien)
+### Changed
+- Any known line can now be used for fitting or for estimating the flux probability distribution without modifying the nebular module source. (Yannick Roehlly & Médéric Boquien)
+- To combine several lines it was before necessary to prefix each line with `line`, for instance `line.NII-654.8+line.NII-658.3`. Now a single `line` prefix is needed, for instance `line.NII-654.8+NII-658.3`. (Médéric Boquien, idea from Yannick Roehlly & Véronique Buat)
+- The format of the `chi2` files has been changed from memory-mapped numpy arrays to FITS tables so that they are easier to handle. At the same time the χ² are stored in a separate file, rather than being repeated in each file, leading to a reduction of up to 50% of the total disk space usage. (Médéric)
+### Fixed
+- The masked values in the observation and results are replaced by NaN when plotting in order to suppress a Matplotlib warning. (Médéric Boquien)
+- Numpy floating-point errors have been disabled as they do not provide useful information to the end user while generating output noise. (Médéric Boquien)
+- FITS verification warnings have been disabled as they do not indicate any real issue with the generated FITS tables. (Médéric Boquien)
+- It is now once again possible to compute models using a parameters file. (Médéric Boquien)
+- The `--outdir` option was broken due to a workaround that was applied to preserve the compatibility with older ConfigObj versions and the way the input data file was handled. It is now more robust. (Médéric Boquien, reported by Marjorie Decleir)
+- The absorption of the Lyman continuum stellar emission is now correctly included in the plots. (Médéric Boquien)
+- Use a more standard version name for the development branch to avoid an exception with recent versions of the python packaging module. (Médéric Boquien)
+- Make sure `pcigale-plots mock` works when `variables` is left empty in the `pdf_analysis` configuration module. (Médéric Boquien)
+- The effective UV bump strength in the `dustatt_modified_starburst` was dependent on the power law slope δ. As this is undesirable, it has been fixed so that the bump strength only depends on the value of the `uv_bump_amplitude` parameter. (Médéric Boquien)
+### Optimised
+- The line and continuum spectral components have been merged so that less work is subsequently required, for instance for the attenuation. This leads to a speedup in the generation of the models. The amplitude depends on the exact parameters but up to 20% has been observed for a typical run on z=0 galaxies. (Médéric Boquien)
+- The initial processing of the input catalog, which can be quite significant for large catalogs, has been accelerated by a factor ~2.5. (Médéric Boquien)
+
 ## 2022.1 (2022-07-04)
 ### Added
 - By default CIGALE adds 10% of the flux in quadrature to the uncertainties to represent sources of uncertainty that are not included by default in the photometric error bars. Changing this value required manually changing a source file. Now this setting is directly available in the `pcigale.ini` file. (Médéric Boquien)

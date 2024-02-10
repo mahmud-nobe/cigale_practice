@@ -1,13 +1,14 @@
-from astropy.table import Column
-import numpy as np
 from pathlib import Path
+
+import numpy as np
+from astropy.table import Column
 from scipy.constants import parsec
 
+from pcigale.utils.console import WARNING, console
 from pcigale.utils.cosmology import luminosity_distance
 from pcigale.utils.io import read_table
-from .utils import get_info
 
-from pcigale.utils.console import console, WARNING
+from pcigale.managers.utils import get_info
 
 
 class ObservationsManager:
@@ -71,7 +72,9 @@ class ObservationsManagerPassbands:
         self.tofit = self.bands + self.intprops + self.extprops
         self.tofit_err = self.bands_err + self.intprops_err + self.extprops_err
 
-        self.observations = list([Observation(row, self)
+        # Build the observations list. We pass a dict as a row encapsulates
+        # the whole astropy table and is slower to access by column
+        self.observations = list([Observation(dict(row), self)
                                   for row in self.table])
 
     def __len__(self):
@@ -309,27 +312,28 @@ class Observation:
     def __init__(self, row, cls):
         self.redshift = row['redshift']
         self.id = row['id']
-        if 'distance' in row.colnames and np.isfinite(row['distance']):
+        if 'distance' in row.keys() and row['distance'] < np.inf:
             self.distance = row['distance'] * parsec * 1e6
         else:
             if self.redshift >= 0.:
                 self.distance = luminosity_distance(self.redshift)
             else:
                 self.distance = np.nan
+
         self.flux = {k: row[k] for k in cls.bands
-                     if np.isfinite(row[k]) and row[k + '_err'] > 0.}
+                     if row[k] < np.inf and row[f'{k}_err'] > 0.}
         self.flux_ul = {k: row[k] for k in cls.bands
-                        if np.isfinite(row[k]) and row[k + '_err'] <= 0.}
-        self.flux_err = {k: row[k + '_err'] for k in self.flux.keys()}
-        self.flux_ul_err = {k: -row[k + '_err'] for k in self.flux_ul.keys()}
+                        if row[k] < np.inf and row[f'{k}_err'] <= 0.}
+        self.flux_err = {k: row[f'{k}_err'] for k in self.flux.keys()}
+        self.flux_ul_err = {k: -row[f'{k}_err'] for k in self.flux_ul.keys()}
 
         self.extprop = {k: row[k] for k in cls.extprops
-                        if np.isfinite(row[k]) and row[k + '_err'] > 0.}
+                        if row[k] < np.inf and row[f'{k}_err'] > 0.}
         self.extprop_ul = {k: row[k] for k in cls.extprops
-                           if np.isfinite(row[k]) and row[k + '_err'] <= 0.}
-        self.extprop_err = {k: row[k + '_err'] for k in self.extprop.keys()}
-        self.extprop_ul_err = {k: -row[k + '_err']
+                           if row[k] < np.inf and row[f'{k}_err'] <= 0.}
+        self.extprop_err = {k: row[f'{k}_err'] for k in self.extprop.keys()}
+        self.extprop_ul_err = {k: -row[f'{k}_err']
                                for k in self.extprop_ul.keys()}
 
         self.intprop = {k: row[k] for k in cls.intprops}
-        self.intprop_err = {k: row[k + '_err'] for k in cls.intprops}
+        self.intprop_err = {k: row[f'{k}_err'] for k in cls.intprops}

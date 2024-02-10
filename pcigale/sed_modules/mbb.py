@@ -13,7 +13,7 @@ wavelength range.
 import numpy as np
 import scipy.constants as cst
 
-from . import SedModule
+from pcigale.sed_modules import SedModule
 
 __category__ = "dust emission"
 
@@ -28,7 +28,7 @@ class MBB(SedModule):
 
     """
 
-    parameter_list = {
+    parameters = {
         "epsilon_mbb": (
             "cigale_list(minvalue=0., maxvalue=1.)",
             "Fraction [>= 0] of L_dust(energy balance) in the MBB",

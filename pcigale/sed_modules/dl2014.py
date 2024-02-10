@@ -9,7 +9,7 @@ This module implements the updated Draine and Li (2007) infrared models.
 import numpy as np
 
 from pcigale.data import SimpleDatabase as Database
-from . import SedModule
+from pcigale.sed_modules import SedModule
 
 __category__ = "dust emission"
 
@@ -22,11 +22,9 @@ class DL2014(SedModule):
     model corresponding to a given set of parameters to this amount of energy
     and add it to the SED.
 
-    Information added to the SED: NAME_alpha.
-
     """
 
-    parameter_list = {
+    parameters = {
         'qpah': (
             'cigale_list(options=0.47 & 1.12 & 1.77 & 2.50 & 3.19 & 3.90 & '
             '4.58 & 5.26 & 5.95 & 6.63 & 7.32)',

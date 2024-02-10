@@ -10,7 +10,7 @@ decaying exponential, or "delayed".
 
 import numpy as np
 
-from . import SedModule
+from pcigale.sed_modules import SedModule
 
 __category__ = "SFH"
 
@@ -23,7 +23,7 @@ class SfhPeriodic(SedModule):
 
     """
 
-    parameter_list = {
+    parameters = {
         "type_bursts": (
             "cigale_list(dtype=int, options=0. & 1. & 2.)",
             "Type of the individual star formation episodes. 0: exponential, "

@@ -8,8 +8,8 @@ This module reads the star formation history in a file.
 
 import numpy as np
 
+from pcigale.sed_modules import SedModule
 from pcigale.utils.io import read_table
-from . import SedModule
 
 __category__ = "SFH"
 
@@ -25,7 +25,7 @@ class SfhFromFile(SedModule):
 
     """
 
-    parameter_list = {
+    parameters = {
         "filename": (
             "string()",
             "Name of the file containing the SFH. The first column must be "
@@ -66,7 +66,7 @@ class SfhFromFile(SedModule):
         time_grid = table.columns[0].data.astype(np.int64)
         if time_grid[0] != 0:
             raise Exception("The time grid must start from 0.")
-        if np.all(time_grid[1:] - time_grid[:-1] == 1) == False:
+        if not np.all(time_grid[1:] - time_grid[:-1] == 1):
             raise Exception("The time step must be 1 Myr. Computed models will"
                             " be wrong.")
 

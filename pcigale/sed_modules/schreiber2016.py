@@ -7,8 +7,9 @@ This module implements the Schreiber et al. (2016) infra-red models.
 """
 
 import numpy as np
+
 from pcigale.data import SimpleDatabase as Database
-from . import SedModule
+from pcigale.sed_modules import SedModule
 
 __category__ = "dust emission"
 
@@ -23,7 +24,7 @@ class Schreiber2016(SedModule):
 
     """
 
-    parameter_list = {
+    parameters = {
         'tdust': (
             'cigale_list(options=15. & 16. & 17. & 18. & 19. & 20. & 21. & '
             '22. & 23. & 24. & 25. & 26. & 27. & 28. & 29. & 30. & 31. & '

@@ -21,25 +21,30 @@ import multiprocessing as mp
 
 import numpy as np
 
-from .. import AnalysisModule
+from pcigale.analysis_modules import AnalysisModule
+from pcigale.analysis_modules.pdf_analysis.workers import \
+    analysis as worker_analysis
+from pcigale.analysis_modules.pdf_analysis.workers import \
+    bestfit as worker_bestfit
+from pcigale.analysis_modules.pdf_analysis.workers import \
+    init_analysis as init_worker_analysis
+from pcigale.analysis_modules.pdf_analysis.workers import \
+    init_bestfit as init_worker_bestfit
+from pcigale.analysis_modules.pdf_analysis.workers import \
+    init_sed as init_worker_sed
+from pcigale.analysis_modules.pdf_analysis.workers import sed as worker_sed
+from pcigale.managers.models import ModelsManager
+from pcigale.managers.observations import ObservationsManager
+from pcigale.managers.parameters import ParametersManager
+from pcigale.managers.results import ResultsManager
+from pcigale.utils.console import INFO, console
 from pcigale.utils.counter import Counter
-from .workers import sed as worker_sed
-from .workers import init_sed as init_worker_sed
-from .workers import init_analysis as init_worker_analysis
-from .workers import init_bestfit as init_worker_bestfit
-from .workers import analysis as worker_analysis
-from .workers import bestfit as worker_bestfit
-from ...managers.results import ResultsManager
-from ...managers.models import ModelsManager
-from ...managers.observations import ObservationsManager
-from ...managers.parameters import ParametersManager
-from pcigale.utils.console import console, INFO
 
 
 class PdfAnalysis(AnalysisModule):
     """PDF analysis module"""
 
-    parameter_list = {
+    parameters = {
         "variables": (
             "cigale_string_list()",
             "List of the physical properties to estimate. Leave empty to "

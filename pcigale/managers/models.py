@@ -7,10 +7,10 @@ of the models.
 import ctypes
 from pathlib import Path
 
-from astropy.table import Table, Column
+from astropy.table import Column, Table
 from astropy.units import Unit
 
-from .utils import SharedArray, get_info
+from pcigale.managers.utils import SharedArray, get_info
 
 
 class ModelsManager:

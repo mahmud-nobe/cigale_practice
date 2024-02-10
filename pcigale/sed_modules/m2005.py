@@ -9,8 +9,8 @@ This module implements the Maraston (2005) Single Stellar Populations.
 import numpy as np
 import scipy.constants as cst
 
-from . import SedModule
-from ..data import SimpleDatabase as Database
+from pcigale.data import SimpleDatabase as Database
+from pcigale.sed_modules import SedModule
 
 __category__ = "SSP"
 
@@ -24,7 +24,7 @@ class M2005(SedModule):
 
     """
 
-    parameter_list = {
+    parameters = {
         'imf': (
             'cigale_list(dtype=int, options=0. & 1.)',
             "Initial mass function: 0 (Salpeter) or 1 (Kroupa)",

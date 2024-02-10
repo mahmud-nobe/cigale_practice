@@ -6,8 +6,8 @@ This module reads a SED spectrum from a file.
 
 """
 
+from pcigale.sed_modules import SedModule
 from pcigale.utils.io import read_table
-from . import SedModule
 
 
 class LoadSpecFile(SedModule):
@@ -15,7 +15,7 @@ class LoadSpecFile(SedModule):
 
     """
 
-    parameter_list = {
+    parameters = {
         "filename": (
             'string()',
             "Name of the file to load and to add to the SED table. This "

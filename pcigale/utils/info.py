@@ -1,14 +1,14 @@
+import multiprocessing as mp
+import pkgutil
 from collections import Counter
 from copy import deepcopy
 from importlib import import_module
-import multiprocessing as mp
-import pkgutil
 from platform import python_version
-from rich.panel import Panel
 from sysconfig import get_platform
 
 import numpy as np
 from rich import box
+from rich.panel import Panel
 from rich.table import Table
 
 import pcigale.sed_modules
@@ -167,7 +167,7 @@ class Info:
 
         if len(self.config["parameters_file"]) == 0:
             return "[warning]None[/warning]"
-        return self.config["parameters_files"]
+        return self.config["parameters_file"]
 
     def _bands(self):
         """Return the formatted list of bands to fit for printing."""

@@ -17,8 +17,8 @@ from itertools import chain
 import numpy as np
 from scipy.constants import c, parsec
 
-from . import SedModule
-from ..sed.utils import flux_trapz
+from pcigale.sed.utils import flux_trapz
+from pcigale.sed_modules import SedModule
 
 __category__ = "restframe_parameters"
 
@@ -31,7 +31,7 @@ class RestframeParam(SedModule):
 
     """
 
-    parameter_list = {
+    parameters = {
         "beta_calz94": (
             "boolean()",
             "Observed and intrinsic UV slopes β and β₀ measured in the same "
@@ -151,7 +151,7 @@ class RestframeParam(SedModule):
 
         lumin_line = np.sum([sed.luminosities[name]
                              for name in sed.luminosities
-                             if 'nebular.lines' in name], axis=0)
+                             if 'nebular.emission' in name], axis=0)
         lumin_cont = sed.luminosity - lumin_line
 
         EW = {}
@@ -225,7 +225,7 @@ class RestframeParam(SedModule):
             sed.add_info("param.IRX", np.log10(sed.info['dust.luminosity'] /
                          (fluxes['FUV'] * self.to_lumin * c / 154e-9)))
 
-        if 'nebular.lines_young' in sed.luminosities:
+        if 'nebular.emission_young' in sed.luminosities:
             for line, EW in self.EW(sed).items():
                 sed.add_info(f"param.EW({line[0]}/{line[1]})", EW, unit='nm')
 

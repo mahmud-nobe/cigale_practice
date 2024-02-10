@@ -9,8 +9,8 @@ Populations.
 
 import numpy as np
 
-from . import SedModule
-from ..data import SimpleDatabase as Database
+from pcigale.data import SimpleDatabase as Database
+from pcigale.sed_modules import SedModule
 
 __category__ = "SSP"
 
@@ -24,7 +24,7 @@ class BC03(SedModule):
 
     """
 
-    parameter_list = {
+    parameters = {
         "imf": (
             "cigale_list(dtype=int, options=0. & 1.)",
             "Initial mass function: 0 (Salpeter) or 1 (Chabrier).",

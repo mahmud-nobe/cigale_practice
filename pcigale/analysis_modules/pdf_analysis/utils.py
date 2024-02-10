@@ -2,21 +2,26 @@ from functools import lru_cache
 from pathlib import Path
 
 from astropy import log
-from ...utils.cosmology import luminosity_distance
+from astropy.table import Table
 import numpy as np
 from scipy import optimize
 from scipy.special import erf
+
+from pcigale.utils.cosmology import luminosity_distance
 
 log.setLevel("ERROR")
 
 
 def save_chi2(obs, variable, models, chi2, values):
-    """Save the chi² and the associated physocal properties."""
-    fname = Path("out") / f"{obs.id}_{variable.replace('/', '_')}_chi2-block-" \
-        f"{models.iblock}.npy"
-    data = np.memmap(fname, dtype=np.float64, mode="w+", shape=(2, chi2.size))
-    data[0, :] = chi2
-    data[1, :] = values
+    """Save the chi² and the associated physical properties."""
+    varname = variable.replace("/", "_")
+
+    fchi2 = Path("out") / f"{obs.id}_chi2-block-{models.iblock}.fits"
+    fvalues = Path("out") / f"{obs.id}_{varname}-block-{models.iblock}.fits"
+
+    if fchi2.exists() is False:
+        Table([chi2], names=("chi2", )).write(fchi2)
+    Table([values], names=(varname, )).write(fvalues)
 
 
 @lru_cache(maxsize=None)

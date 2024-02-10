@@ -10,7 +10,7 @@ FIR/radio correlation and the power law of the synchrotron spectrum.
 import numpy as np
 import scipy.constants as cst
 
-from . import SedModule
+from pcigale.sed_modules import SedModule
 
 __category__ = "radio"
 
@@ -22,7 +22,7 @@ class Radio(SedModule):
 
     """
 
-    parameter_list = {
+    parameters = {
         "qir_sf": (
             "cigale_list(minvalue=0.)",
             "The value of the FIR/radio correlation coefficient for star "

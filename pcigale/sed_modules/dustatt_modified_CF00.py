@@ -23,7 +23,7 @@ Parameters available for analysis
 
 import numpy as np
 
-from . import SedModule
+from pcigale.sed_modules import SedModule
 
 __category__ = "dust attenuation"
 
@@ -67,7 +67,7 @@ class ModCF00Att(SedModule):
 
     """
 
-    parameter_list = {
+    parameters = {
         "Av_ISM": (
             "cigale_list(minvalue=0)",
             "V-band attenuation in the interstellar medium.",

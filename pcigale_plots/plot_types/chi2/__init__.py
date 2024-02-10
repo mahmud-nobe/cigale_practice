@@ -1,23 +1,25 @@
 from itertools import product
+from pathlib import Path
+
+from astropy.table import Table
 import matplotlib
 
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt
-import multiprocessing as mp
 import numpy as np
 
-from pcigale.utils.io import read_table
-from pcigale.utils.console import console, INFO
+from pcigale.utils.console import INFO, console
 from pcigale.utils.counter import Counter
+from pcigale.utils.io import read_table
 from pcigale_plots.plot_types import Plotter
 
+OBSERVATIONS = "observations.fits"
 
 class Chi2(Plotter):
     def __init__(self, config, format, outdir):
         """Plot the χ² values of analysed variables."""
-        self.configuration = config.configuration
-        file = outdir.parent / self.configuration["data_file"]
-        input_data = read_table(file)
+        self.configuration = config.config
+        input_data = read_table(outdir / OBSERVATIONS)
         save_chi2 = self.configuration["analysis_params"]["save_chi2"]
 
         chi2_vars = []
@@ -66,11 +68,12 @@ class Chi2(Plotter):
         ax = figure.add_subplot(111)
 
         var_name = var_name.replace("/", "_")
-        fnames = outdir.glob(f"{obj_name}_{var_name}_chi2-block-*.npy")
-        for fname in fnames:
-            data = np.memmap(fname, dtype=np.float64)
-            data = np.memmap(fname, dtype=np.float64, shape=(2, data.size // 2))
-            ax.scatter(data[1, :], data[0, :], color="k", s=0.1)
+        fnames = sorted(outdir.glob(f"{obj_name}_{var_name}-block-*.fits"))
+        fchi2s = sorted(outdir.glob(f"{obj_name}_chi2-block-*.fits"))
+        for fname, fchi2 in zip(fnames, fchi2s):
+            values = Table.read(fname)
+            chi2 = Table.read(fchi2)
+            ax.scatter(values[var_name], chi2["chi2"], color="k", s=0.1)
         ax.set_xlabel(var_name)
         ax.set_ylabel(r"Reduced $\chi^2$")
         ax.set_ylim(
@@ -78,7 +81,7 @@ class Chi2(Plotter):
         )
         ax.minorticks_on()
         figure.suptitle(
-            f"Reduced $\chi^2$ distribution of {var_name} for " f"{obj_name}."
+            f"Reduced $\chi^2$ distribution of {var_name} for {obj_name}."
         )
         figure.savefig(outdir / f"{obj_name}_{var_name}_chi2.{format}")
         plt.close(figure)

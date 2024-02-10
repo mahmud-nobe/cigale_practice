@@ -20,7 +20,7 @@ to 40 km/s as well as some intermediate values.
 
 import numpy as np
 
-from . import SedModule
+from pcigale.sed_modules import SedModule
 
 __category__ = "SFH"
 
@@ -34,7 +34,7 @@ class SfhBuat08(SedModule):
 
     """
 
-    parameter_list = {
+    parameters = {
         "velocity": (
             "cigale_list(minvalue=40., maxvalue=360.)",
             "Rotational velocity of the galaxy in km/s. Must be between 40 "

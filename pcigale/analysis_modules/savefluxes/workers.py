@@ -1,7 +1,8 @@
-import numpy as np
 from pathlib import Path
 
-from ...warehouse import SedWarehouse
+import numpy as np
+
+from pcigale.warehouse import SedWarehouse
 
 
 def init_fluxes(models, counter):

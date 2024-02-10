@@ -21,7 +21,7 @@ Parameters available for analysis
 
 import numpy as np
 
-from . import SedModule
+from pcigale.sed_modules import SedModule
 
 __category__ = "dust attenuation"
 
@@ -98,7 +98,7 @@ class TwoPowerLawAtt(SedModule):
 
     """
 
-    parameter_list = {
+    parameters = {
         "Av_BC": (
             "cigale_list(minvalue=0)",
             "V-band attenuation in the birth clouds.",

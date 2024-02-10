@@ -1,21 +1,23 @@
 from itertools import product
-import matplotlib
 
+from astropy.table import Table
+import matplotlib
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt
-import multiprocessing as mp
 import numpy as np
 
-from pcigale.utils.io import read_table
-from pcigale.utils.console import console, INFO, WARNING
+from pcigale.utils.console import INFO, WARNING, console
 from pcigale.utils.counter import Counter
+from pcigale.utils.io import read_table
 from pcigale_plots.plot_types import Plotter
+
+OBSERVATIONS = "observations.fits"
 
 
 class PDF(Plotter):
     def __init__(self, config, format, outdir):
         """Plot the PDF of analysed variables."""
-        self.configuration = config.configuration
+        self.configuration = config.config
         save_chi2 = self.configuration["analysis_params"]["save_chi2"]
 
         pdf_vars = []
@@ -24,7 +26,7 @@ class PDF(Plotter):
         if "all" in save_chi2 or "fluxes" in save_chi2:
             pdf_vars += self.configuration["analysis_params"]["bands"]
 
-        input_data = read_table(outdir.parent / self.configuration["data_file"])
+        input_data = read_table(outdir / OBSERVATIONS)
         items = list(product(input_data["id"], pdf_vars, [format], [outdir]))
         counter = Counter(len(items), 1, "PDF")
 
@@ -62,15 +64,16 @@ class PDF(Plotter):
         """
         gbl_counter.inc()
         var_name = var_name.replace("/", "_")
-        fnames = outdir.glob(f"{obj_name}_{var_name}_chi2-block-*.npy")
+        fnames = sorted(outdir.glob(f"{obj_name}_{var_name}-block-*.fits"))
+        fchi2 = sorted(outdir.glob(f"{obj_name}_chi2-block-*.fits"))
         likelihood = []
         model_variable = []
-        for fname in fnames:
-            data = np.memmap(fname, dtype=np.float64)
-            data = np.memmap(fname, dtype=np.float64, shape=(2, data.size // 2))
+        for fname, fchi2 in zip(fnames, fchi2):
+            values = Table.read(fname)
+            chi2 = Table.read(fchi2)
 
-            likelihood.append(np.exp(-data[0, :] / 2.0))
-            model_variable.append(data[1, :])
+            model_variable.append(values[var_name].data)
+            likelihood.append(np.exp(-0.5 * chi2["chi2"].data))
         if len(likelihood) > 0:
             likelihood = np.concatenate(likelihood)
             model_variable = np.concatenate(model_variable)
