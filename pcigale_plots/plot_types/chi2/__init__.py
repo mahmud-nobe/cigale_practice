@@ -7,6 +7,7 @@ import matplotlib
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 import numpy as np
+import pandas as pd
 
 from pcigale.utils.console import INFO, console
 from pcigale.utils.counter import Counter
@@ -73,15 +74,18 @@ class Chi2(Plotter):
         for fname, fchi2 in zip(fnames, fchi2s):
             values = Table.read(fname)
             chi2 = Table.read(fchi2)
-            ax.scatter(values[var_name], chi2["chi2"], color="k", s=0.1)
+            data_df = pd.DataFrame([ values[var_name], chi2["chi2"]], index = [var_name, 'chi2']).T
+            data_df['reduced_chi2'] = data_df.chi2 / min(data_df.chi2)
+            filtered_df = data_df[data_df.reduced_chi2 <= 2]
+            ax.scatter(filtered_df[var_name], filtered_df["chi2"], color="k", s=0.1)
         ax.set_xlabel(var_name)
-        ax.set_ylabel(r"Reduced $\chi^2$")
+        ax.set_ylabel(r"Relative $\chi^2$ ($\chi^2 / \chi^2_{min}$)")
         ax.set_ylim(
             0.0,
         )
         ax.minorticks_on()
         figure.suptitle(
-            f"Reduced $\chi^2$ distribution of {var_name} for {obj_name}."
+            f"Relative $\chi^2$ distribution of {var_name} for {obj_name}."
         )
         figure.savefig(outdir / f"{obj_name}_{var_name}_chi2.{format}")
         plt.close(figure)
