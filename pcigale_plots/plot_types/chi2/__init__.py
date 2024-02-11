@@ -5,6 +5,7 @@ matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 import multiprocessing as mp
 import numpy as np
+import pandas as pd
 
 from pcigale.utils.io import read_table
 from pcigale.utils.console import console, INFO
@@ -71,8 +72,6 @@ class Chi2(Plotter):
             data = np.memmap(fname, dtype=np.float64)
             data = np.memmap(fname, dtype=np.float64, shape=(2, data.size // 2))
             data_df = pd.DataFrame(data, index=['chi2', var_name]).T
-            if(min(data_df.chi2) == 0 or min(data_df.chi2) == np.nan):
-                return(f'$chi^2_{min}$ is {min(data_df.chi2)}')
             data_df['relative_chi2'] = data_df.chi2 / min(data_df.chi2)
             filtered_data = data_df[data_df.relative_chi2 <= 2]
             ax.scatter(filtered_data[var_name], filtered_data.relative_chi2, color="k", s=0.1)

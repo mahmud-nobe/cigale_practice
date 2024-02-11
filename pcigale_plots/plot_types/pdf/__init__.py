@@ -5,6 +5,7 @@ matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 import multiprocessing as mp
 import numpy as np
+import pandas as pd
 
 from pcigale.utils.io import read_table
 from pcigale.utils.console import console, INFO, WARNING
@@ -69,8 +70,12 @@ class PDF(Plotter):
             data = np.memmap(fname, dtype=np.float64)
             data = np.memmap(fname, dtype=np.float64, shape=(2, data.size // 2))
 
-            likelihood.append(np.exp(-data[0, :] / 2.0))
-            model_variable.append(data[1, :])
+            data_df = pd.DataFrame(data, index=['chi2', var_name]).T
+            data_df['relative_chi2'] = data_df.chi2 / min(data_df.chi2)
+            filtered_data = data_df[data_df.relative_chi2 <= 2]
+
+            likelihood.append(np.exp(- filtered_data["chi2"].to_numpy() / 2.0))
+            model_variable.append(filtered_data[var_name].to_numpy())
         if len(likelihood) > 0:
             likelihood = np.concatenate(likelihood)
             model_variable = np.concatenate(model_variable)
