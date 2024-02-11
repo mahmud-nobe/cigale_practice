@@ -75,7 +75,10 @@ class Chi2(Plotter):
             values = Table.read(fname)
             chi2 = Table.read(fchi2)
             data_df = pd.DataFrame([ values[var_name], chi2["chi2"]], index = [var_name, 'chi2']).T
-            data_df['reduced_chi2'] = data_df.chi2 / min(data_df.chi2)
+            if (min(data_df.chi2) == np.nan or min(data_df.chi2) == 0):
+                return(f'$chi^2_{min}$ is {data_df.chi2}')
+            else:
+                data_df['reduced_chi2'] = data_df.chi2 / min(data_df.chi2)
             filtered_df = data_df[data_df.reduced_chi2 <= 2]
             ax.scatter(filtered_df[var_name], filtered_df["chi2"], color="k", s=0.1)
         ax.set_xlabel(var_name)
