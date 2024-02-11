@@ -8,15 +8,15 @@ from glob import glob  # To allow the use of glob() in "eval..."
 import numpy as np
 import validate
 
-from picagle.managers.parameters import ParametersManager
+from ..managers.parameters import ParametersManager
 from ..data import SimpleDatabase as Database
-from pcigale.utils.io import read_table
+from ..utils.io import read_table
 from .. import sed_modules
 from .. import analysis_modules
 from ..warehouse import SedWarehouse
 from . import validation
-from pcigale.sed_modules.nebular import default_lines
-from pcigale.utils.console import console, INFO, ERROR
+from ..sed_modules.nebular import default_lines
+from ..utils.console import console, INFO, ERROR
 
 
 class Configuration:
