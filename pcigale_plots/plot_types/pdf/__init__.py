@@ -5,6 +5,7 @@ import matplotlib
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 import numpy as np
+import pandas as pd
 
 from pcigale.utils.console import INFO, WARNING, console
 from pcigale.utils.counter import Counter
@@ -72,8 +73,13 @@ class PDF(Plotter):
             values = Table.read(fname)
             chi2 = Table.read(fchi2)
 
-            model_variable.append(values[var_name].data)
-            likelihood.append(np.exp(-0.5 * chi2["chi2"].data))
+            data_df = pd.DataFrame([ np.ma.filled(values[var_name]), np.ma.filled(chi2)["chi2"]], index = [var_name, 'chi2']).T
+            data_df['relative_chi2'] = data_df.chi2 / min(data_df.chi2)
+            filtered_df = data_df[data_df.relative_chi2 <= 2]
+
+            model_variable.append(filtered_df[var_name].to_numpy())
+            likelihood.append(np.exp(-0.5 * filtered_df["chi2"].to_numpy()))
+
         if len(likelihood) > 0:
             likelihood = np.concatenate(likelihood)
             model_variable = np.concatenate(model_variable)
