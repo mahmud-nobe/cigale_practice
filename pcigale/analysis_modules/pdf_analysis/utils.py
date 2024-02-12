@@ -14,9 +14,13 @@ def save_chi2(obs, variable, models, chi2, values):
     """Save the chi² and the associated physocal properties."""
     fname = Path("out") / f"{obs.id}_{variable.replace('/', '_')}_chi2-block-" \
         f"{models.iblock}.npy"
-    data = np.memmap(fname, dtype=np.float64, mode="w+", shape=(2, chi2.size))
-    data[0, :] = chi2
-    data[1, :] = values
+    
+    chi2_data = np.array([chi2, values], dtype=np.float64)
+    mask = chi2_data[0, :] <= 5 * min(chi2)
+    chi2_data = chi2_data[:, mask]
+    
+    data = np.memmap(fname, dtype=np.float64, mode="w+", shape=(2, sum(mask)))
+    data[:] = chi2_data
 
 
 @lru_cache(maxsize=None)
